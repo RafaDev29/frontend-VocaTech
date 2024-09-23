@@ -47,10 +47,12 @@
       const router = useRouter(); // Inicializar router para redirigir
   
       const logout = () => {
-        // Limpiar localStorage y redirigir al login
-        localStorage.clear();  // Limpiar el almacenamiento local
-        router.push('/login'); // Redirigir a la página de login
-      };
+    
+      localStorage.clear();  // Limpiar el almacenamiento local
+      store.commit('clearState');  // Limpiar el estado de Vuex, si tienes esta mutación implementada
+      router.push('/login'); // Redirigir a la página de login
+    };
+
   
       return {
         username,

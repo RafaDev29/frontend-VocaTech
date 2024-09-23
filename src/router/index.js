@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import store from '@/store'; // Importar Vuex para verificar el estado
 
 const router = createRouter({
     history: createWebHistory(),
@@ -48,9 +49,17 @@ const router = createRouter({
     ]
 });
 
-// Permitir todas las rutas sin validación de autenticación
+// Modificar el guard de navegación para prevenir el regreso al login si ya se ingresaron los datos
 router.beforeEach((to, from, next) => {
-    next(); // Permitir todas las rutas
+    const nombreApellidos = store.state.nombreApellidos || localStorage.getItem('nombreApellidos');
+    const edad = store.state.edad || localStorage.getItem('edad');
+
+    if (to.name === 'login' && nombreApellidos && edad) {
+        // Si el usuario intenta ir al login pero ya ingresó los datos, redirigirlo a la vista de bienvenida
+        next({ name: 'welcome' });
+    } else {
+        next(); // Permitir todas las demás rutas
+    }
 });
 
 export default router;
