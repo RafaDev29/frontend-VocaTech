@@ -11,7 +11,7 @@
   
           <!-- Opciones de navegación -->
           <nav class="flex space-x-8">
-            <router-link to="/" class="text-gray-800 font-bold hover:text-blue-600 transition">Inicio</router-link>
+            <router-link to="/welcome" class="text-gray-800 font-bold hover:text-blue-600 transition">Inicio</router-link>
             <router-link to="/test-vocacional" class="text-gray-800 hover:text-blue-600 transition">Test Vocacional</router-link>
             <router-link to="/recursos" class="text-gray-800 hover:text-blue-600 transition">Recursos</router-link>
             <router-link to="/resultados" class="text-gray-800 hover:text-blue-600 transition">Resultados</router-link>
@@ -38,15 +38,18 @@
   
   <script>
   import { ref } from 'vue';
+  import { useRouter } from 'vue-router'; // Importar router para redirigir
   import store from '@/store';
   
   export default {
     setup() {
-      const username = ref(store.state.nombreApellidos); // Obtener el nombre de usuario
+      const username = ref(store.state.nombreApellidos || "Usuario"); // Obtener el nombre de usuario
+      const router = useRouter(); // Inicializar router para redirigir
   
       const logout = () => {
-        // Aquí puedes manejar la lógica de cerrar sesión
-        console.log("Cerrar sesión");
+        // Limpiar localStorage y redirigir al login
+        localStorage.clear();  // Limpiar el almacenamiento local
+        router.push('/login'); // Redirigir a la página de login
       };
   
       return {

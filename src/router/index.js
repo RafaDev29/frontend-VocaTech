@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-//import store from '@/store';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -14,7 +13,22 @@ const router = createRouter({
                 {
                     path: "welcome",
                     name: "welcome",
-                    component: () => import("@/views/WelcomeView.vue")  // Nueva vista
+                    component: () => import("@/views/welcomeView.vue")  // Vista de inicio
+                },
+                {
+                    path: "test-vocacional",
+                    name: "testVocacional",
+                    component: () => import("@/views/testVocacionalView.vue")  // Nueva vista para el Test Vocacional
+                },
+                {
+                    path: "recursos",
+                    name: "recursos",
+                    component: () => import("@/views/recursosView.vue")  // Nueva vista para Recursos
+                },
+                {
+                    path: "resultados",
+                    name: "resultados",
+                    component: () => import("@/views/resultadosView.vue")  // Nueva vista para Resultados
                 }
             ]
         },
@@ -24,7 +38,7 @@ const router = createRouter({
             },
             path: "/login",
             name: "login",
-            component: () => import("@/views/LoginView.vue")
+            component: () => import("@/views/LoginView.vue")  // Vista de Login
         },
         // Redirigir a login si la ruta no coincide
         {
@@ -34,9 +48,9 @@ const router = createRouter({
     ]
 });
 
-// No necesitamos validaciones de autenticación, solo redirigimos si es necesario
+// Permitir todas las rutas sin validación de autenticación
 router.beforeEach((to, from, next) => {
-    next(); // Permitir todas las rutas sin restricciones
+    next(); // Permitir todas las rutas
 });
 
 export default router;

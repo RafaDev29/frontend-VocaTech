@@ -1,54 +1,39 @@
 import { createStore } from "vuex";
 
-const localStorageKey = 'DJsdfg-2352LLDSF-dfglñdskfgiu38r_[22334ews34>YUVASZghsvdV';
+const localStorageKey = 'app_user_data'; // Llave para el localStorage
 
 export default createStore({
     state: {
-        isAuthenticated: false,
-        role: '',
-        username: '',
-        token: '',
-        nombreApellidos: '',  // Añadido
-        edad: ''  // Añadido
-    },
-    getters: {
-
+        nombreApellidos: '',
+        edad: '',
     },
     mutations: {
-        setIsAuthenticated(state, value) {
-            state.isAuthenticated = value;
-            localStorage.setItem(localStorageKey, JSON.stringify(state));
-        },
-        setUsername(state, value) {
-            state.username = value;
-            localStorage.setItem(localStorageKey, JSON.stringify(state));
-        },
-        setToken(state, value) {
-            state.token = value;
-            localStorage.setItem(localStorageKey, JSON.stringify(state));
-        },
-        setRole(state, value) {
-            state.role = value;
-            localStorage.setItem(localStorageKey, JSON.stringify(state));
-        },
-        setNombreApellidos(state, value) {  // Nueva mutación
+        setNombreApellidos(state, value) {
             state.nombreApellidos = value;
-            localStorage.setItem(localStorageKey, JSON.stringify(state));
+            localStorage.setItem(localStorageKey, JSON.stringify(state)); // Guardar en localStorage
         },
-        setEdad(state, value) {  // Nueva mutación
+        setEdad(state, value) {
             state.edad = value;
-            localStorage.setItem(localStorageKey, JSON.stringify(state));
+            localStorage.setItem(localStorageKey, JSON.stringify(state)); // Guardar en localStorage
         },
         initializeStateFromLocalStorage(state) {
             const storedState = localStorage.getItem(localStorageKey);
             if (storedState) {
-                Object.assign(state, JSON.parse(storedState));
+                Object.assign(state, JSON.parse(storedState)); // Asignar datos del localStorage al estado
             }
+        },
+        clearState(state) {
+            state.nombreApellidos = '';
+            state.edad = '';
+            localStorage.removeItem(localStorageKey); // Borrar localStorage
         }
     },
     actions: {
         initializeStateFromLocalStorage({ commit }) {
-            commit('initializeStateFromLocalStorage');
+            commit('initializeStateFromLocalStorage'); // Acción para inicializar
+        },
+        clearState({ commit }) {
+            commit('clearState'); // Acción para limpiar el estado
         }
     }
-})
+});
