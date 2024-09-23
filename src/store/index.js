@@ -7,7 +7,9 @@ export default createStore({
         isAuthenticated: false,
         role: '',
         username: '',
-        token: ''
+        token: '',
+        nombreApellidos: '',  // Añadido
+        edad: ''  // Añadido
     },
     getters: {
 
@@ -29,7 +31,14 @@ export default createStore({
             state.role = value;
             localStorage.setItem(localStorageKey, JSON.stringify(state));
         },
-        // Agregar una mutación para inicializar el estado desde localStorage al cargar la página
+        setNombreApellidos(state, value) {  // Nueva mutación
+            state.nombreApellidos = value;
+            localStorage.setItem(localStorageKey, JSON.stringify(state));
+        },
+        setEdad(state, value) {  // Nueva mutación
+            state.edad = value;
+            localStorage.setItem(localStorageKey, JSON.stringify(state));
+        },
         initializeStateFromLocalStorage(state) {
             const storedState = localStorage.getItem(localStorageKey);
             if (storedState) {
