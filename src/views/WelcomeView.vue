@@ -1,55 +1,37 @@
+<template>
+  <div class="min-h-screen bg-gradient-to-r  from-blue-400 to-indigo-600 flex flex-col items-center justify-center">
+    <!-- Encabezado llamativo con íconos -->
+    <div class="text-center">
+      <h1 class="text-5xl font-extrabold text-white mb-4">
+        <span class="mdi mdi-school-outline"></span> Test perfil básico
+      </h1>
+      <p class="text-lg text-white font-semibold">
+        Descubre tu perfil profesional en solo unos minutos <span class="mdi mdi-timer-outline"></span>
+      </p>
+    </div>
+
+    <!-- Componente del formulario -->
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8">
+      <TestForm />
+    </div>
+
+    <!-- Mensaje motivacional al final -->
+    <div class=" text-center text-white text-lg">
+      ¡Completa el test y descubre qué carreras te esperan! <span class="mdi mdi-star-circle-outline text-yellow-400"></span>
+    </div>
+  </div>
+</template>
+
 <script>
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';  // Importar el router
-import Swal from 'sweetalert2'; 
+import TestForm from '@/components/welcome/TestForm.vue';
 
 export default {
-  setup() {
-    const store = useStore();
-    const router = useRouter();  // Inicializar el router
-    const nombreApellidos = ref('');
-    const edad = ref('');
-
-    const empezar = () => {
-      if (!nombreApellidos.value) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Por favor, ingrese su nombre y apellidos.',
-        });
-        return;
-      }
-
-      if (!edad.value) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Por favor, ingrese su edad.',
-        });
-        return;
-      }
-
-      // Almacenar en Vuex
-      store.commit('setNombreApellidos', nombreApellidos.value);
-      store.commit('setEdad', edad.value);
-
-      // Redirigir a la nueva vista de bienvenida
-      router.push({ name: 'welcome' });
-
-      // Mensaje de éxito
-      Swal.fire({
-        icon: 'success',
-        title: 'Datos ingresados correctamente',
-        text: `Nombre: ${nombreApellidos.value}, Edad: ${edad.value}`,
-      });
-    };
-
-    return {
-      nombreApellidos,
-      edad,
-      empezar,
-    };
-  },
+  components: {
+    TestForm
+  }
 };
 </script>
+
+<style scoped>
+@import '@mdi/font/css/materialdesignicons.min.css'; /* Importa MDI Icons */
+</style>

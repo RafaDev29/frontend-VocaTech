@@ -30,7 +30,7 @@
       </header>
   
       <!-- Contenido principal -->
-      <main class="py-10 px-6">
+      <main class="">
         <router-view />
       </main>
     </div>
