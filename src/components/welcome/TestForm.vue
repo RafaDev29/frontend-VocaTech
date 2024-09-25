@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-2xl mx-auto pb-10 mb-10 p-5 bg-white shadow-lg rounded-lg relative">
+ 
     <h1 class="text-3xl font-bold mb-8 text-center">Test de Orientación Vocacional</h1>
     
     <!-- Mostramos un indicador de procesando mientras esperamos la respuesta -->
@@ -47,7 +47,7 @@
         </button>
       </div>
     </div>
-  </div>
+
 </template>
 
 <script>
