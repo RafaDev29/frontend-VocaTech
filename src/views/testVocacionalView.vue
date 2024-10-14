@@ -1,13 +1,16 @@
 <template>
-    <div class="text-center py-10">
-      <h1 class="text-4xl font-bold text-blue-600">Test Vocacional</h1>
-      <p class="mt-4">Aquí estará el test vocacional.</p>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'TestVocacionalView',
-  };
-  </script>
-  
+  <div>
+    <h1>Test Vocacional</h1>
+    <VocationalForm />
+  </div>
+</template>
+
+<script>
+import VocationalForm from "@/components/vocacional/VocationalForm.vue";
+
+export default {
+  components: {
+    VocationalForm,
+  },
+};
+</script>
