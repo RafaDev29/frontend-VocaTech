@@ -1,112 +1,122 @@
 <template>
-    <div class="max-w-3xl mx-auto mt-10">
-      <h1 class="text-3xl font-bold mb-8 text-center">Test de Orientación Vocacional</h1>
-  
-      <!-- Indicador de procesamiento -->
-      <div v-if="isLoading" class="text-center text-xl text-blue-500">
-        Procesando tus respuestas...
+  <div class="max-w-3xl mx-auto mt-10">
+    <h1 class="text-3xl font-bold mb-8 text-center">Test de Orientación Vocacional</h1>
+
+    <!-- Indicador de procesamiento -->
+    <div v-if="isLoading" class="text-center text-xl text-blue-500">
+      Procesando tus respuestas...
+    </div>
+
+    <!-- Mostrar resultado del test cognitivo y botón de continuar -->
+    <div v-if="result && !showLikertTest && !careers">
+      <p>¡Test cognitivo completado! ¿Listo para continuar con la siguiente parte?</p>
+      <button @click="showLikertTest = true" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+        Continuar
+      </button>
+    </div>
+
+    <!-- Formulario del test cognitivo -->
+    <div v-else-if="!result && !showLikertTest">
+      <div class="flex flex-col items-center justify-center space-y-8">
+        <h3 class="text-xl font-semibold text-center">{{ areas[currentArea].name }}</h3>
+
+        <!-- Mostrar las tres preguntas de un área -->
+        <div v-for="(question, index) in areas[currentArea].questions" :key="index" class="w-full flex flex-col space-y-4">
+          <h3 class="text-lg font-medium">{{ question.text }}</h3>
+          <div v-for="(opcion, i) in question.opciones" :key="i" class="flex items-center">
+            <input
+              type="radio"
+              :name="'pregunta-' + currentArea + '-' + index"
+              :value="opcion.letra"
+              v-model="respuestas[currentArea][index]"
+              class="mr-3"
+              required
+            />
+            <label class="text-gray-700 text-lg">{{ opcion.text }}</label>
+          </div>
+        </div>
       </div>
-  
-      <!-- Mostrar resultado del test cognitivo y botón de continuar -->
-      <div v-if="result && !showLikertTest">
-        <p>¡Test cognitivo completado! ¿Listo para continuar con la siguiente parte?</p>
-        <button @click="showLikertTest = true" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+
+      <!-- Botones de navegación -->
+      <div class="flex justify-between mt-8">
+        <button v-if="currentArea > 0" @click="prevArea" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400 text-gray-700">
+          &larr; Anterior
+        </button>
+
+        <button v-if="currentArea < areas.length - 1" @click="nextArea" :disabled="!areAllQuestionsAnswered"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:bg-blue-300">
+          Siguiente &rarr;
+        </button>
+
+        <button v-if="currentArea === areas.length - 1" @click="submitTest" :disabled="!areAllQuestionsAnswered"
+          class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 disabled:bg-green-300">
           Continuar
         </button>
       </div>
-  
-      <!-- Formulario del test cognitivo -->
-      <div v-else-if="!result && !showLikertTest">
-        <div class="flex flex-col items-center justify-center space-y-8">
-          <h3 class="text-xl font-semibold text-center">{{ areas[currentArea].name }}</h3>
-  
-          <!-- Mostrar las tres preguntas de un área -->
-          <div v-for="(question, index) in areas[currentArea].questions" :key="index" class="w-full flex flex-col space-y-4">
-            <h3 class="text-lg font-medium">{{ question.text }}</h3>
-            <div v-for="(opcion, i) in question.opciones" :key="i" class="flex items-center">
-              <input
-                type="radio"
-                :name="'pregunta-' + currentArea + '-' + index"
-                :value="opcion.letra"
-                v-model="respuestas[currentArea][index]"
-                class="mr-3"
-                required
-              />
-              <label class="text-gray-700 text-lg">{{ opcion.text }}</label>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Botones de navegación -->
-        <div class="flex justify-between mt-8">
-          <button v-if="currentArea > 0" @click="prevArea" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400 text-gray-700">
-            &larr; Anterior
-          </button>
-  
-          <button v-if="currentArea < areas.length - 1" @click="nextArea" :disabled="!areAllQuestionsAnswered"
-            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:bg-blue-300">
-            Siguiente &rarr;
-          </button>
-  
-          <button v-if="currentArea === areas.length - 1" @click="submitTest" :disabled="!areAllQuestionsAnswered"
-            class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 disabled:bg-green-300">
-            Continuar
-          </button>
+    </div>
+
+    <!-- Test de escala de Likert por área -->
+    <div v-if="showLikertTest && !careers">
+      <h2 class="text-2xl font-bold mb-6 text-center">{{ areasLikert[currentAreaLikert].name }}</h2>
+
+      <div v-for="(situacion, index) in areasLikert[currentAreaLikert].situaciones" :key="index" class="mb-8">
+        <h3 class="text-xl font-semibold">{{ situacion.text }}</h3>
+        <div class="flex space-x-4 mt-4">
+          <label v-for="i in 5" :key="i" class="flex items-center">
+            <input
+              type="radio"
+              :name="'situacion-' + currentAreaLikert + '-' + index"
+              :value="i - 1"
+              v-model="respuestasLikert[currentAreaLikert][index]"
+              class="mr-2"
+            />
+            <span>{{ i - 1 }}</span>
+          </label>
         </div>
       </div>
-  
-      <!-- Test de escala de Likert por área -->
-      <div v-if="showLikertTest">
-        <h2 class="text-2xl font-bold mb-6 text-center">{{ areasLikert[currentAreaLikert].name }}</h2>
-  
-        <div v-for="(situacion, index) in areasLikert[currentAreaLikert].situaciones" :key="index" class="mb-8">
-          <h3 class="text-xl font-semibold">{{ situacion.text }}</h3>
-          <div class="flex space-x-4 mt-4">
-            <label v-for="i in 5" :key="i" class="flex items-center">
-              <input
-                type="radio"
-                :name="'situacion-' + currentAreaLikert + '-' + index"
-                :value="i - 1"
-                v-model="respuestasLikert[currentAreaLikert][index]"
-                class="mr-2"
-              />
-              <span>{{ i - 1 }}</span>
-            </label>
-          </div>
-        </div>
-  
-        <!-- Botones de navegación en test de Likert -->
-        <div class="flex justify-between mt-8">
-          <button v-if="currentAreaLikert > 0" @click="prevLikertArea" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400 text-gray-700">
-            &larr; Anterior
-          </button>
-  
-          <button v-if="currentAreaLikert < areasLikert.length - 1" @click="nextLikertArea" :disabled="!areAllLikertQuestionsAnswered"
-            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:bg-blue-300">
-            Siguiente &rarr;
-          </button>
-  
-          <button v-if="currentAreaLikert === areasLikert.length - 1" @click="submitLikertTest" :disabled="!areAllLikertQuestionsAnswered"
-            class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 disabled:bg-green-300">
-            Enviar Respuestas
-          </button>
-        </div>
+
+      <!-- Botones de navegación en test de Likert -->
+      <div class="flex justify-between mt-8">
+        <button v-if="currentAreaLikert > 0" @click="prevLikertArea" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400 text-gray-700">
+          &larr; Anterior
+        </button>
+
+        <button v-if="currentAreaLikert < areasLikert.length - 1" @click="nextLikertArea" :disabled="!areAllLikertQuestionsAnswered"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:bg-blue-300">
+          Siguiente &rarr;
+        </button>
+
+        <button v-if="currentAreaLikert === areasLikert.length - 1" @click="submitLikertTest" :disabled="!areAllLikertQuestionsAnswered"
+          class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 disabled:bg-green-300">
+          Enviar Respuestas
+        </button>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        currentArea: 0, // Controla qué área se está mostrando en el test cognitivo
-        currentAreaLikert: 0, // Controla qué área se está mostrando en el test de Likert
-        respuestas: [[], [], [], [], []], // Array para guardar las respuestas por área del test cognitivo
-        respuestasLikert: [[], [], [], [], []], // Array para guardar las respuestas por área del test de Likert
-        isLoading: false, // Indicador de carga
-        result: null, // Resultado del test cognitivo
-        showLikertTest: false, // Controla la visibilidad del test de Likert
-        areas: [
+
+    <!-- Mostrar el componente ResultVocacional si las carreras están disponibles -->
+    <ResultVocacional v-if="careers" :careers="careers" />
+  </div>
+</template>
+
+<script>
+import { vocationalApi } from '@/api/vocationalService';
+import ResultVocacional from '@/components/vocacional/ResultVocacional.vue';
+
+export default {
+  components: {
+    ResultVocacional
+  },
+  data() {
+    return {
+      currentArea: 0, // Controla qué área se está mostrando en el test cognitivo
+      currentAreaLikert: 0, // Controla qué área se está mostrando en el test de Likert
+      respuestas: [[], [], [], [], []], // Array para guardar las respuestas por área del test cognitivo
+      respuestasLikert: [[], [], [], [], []], // Array para guardar las respuestas por área del test de Likert
+      isLoading: false, // Indicador de carga
+      result: null, // Resultado del test cognitivo
+      showLikertTest: false, // Controla la visibilidad del test de Likert
+      careers: null, // Para guardar las carreras sugeridas
+      areas: [
   {
     name: "Área 1: Arte y Creatividad",
     questions: [
@@ -253,7 +263,7 @@
     ]
   }
 ],
-areasLikert: [
+      areasLikert: [
         {
           name: "Área 1: Arte y Creatividad",
           situaciones: [
@@ -289,72 +299,90 @@ areasLikert: [
             { text: "Situación 10: Biología - ¿Qué tan satisfecho te sientes con esta experiencia?" }
           ]
         }
-      ] // Aquí puedes agregar tus áreas y situaciones de Likert
-      };
+      ]
+    };
+  },
+  computed: {
+    areAllQuestionsAnswered() {
+      // Asegurar que el array de respuestas esté inicializado y coincida con la cantidad de preguntas
+      return (
+        Array.isArray(this.respuestas[this.currentArea]) &&
+        this.respuestas[this.currentArea].length === this.areas[this.currentArea].questions.length
+      );
     },
-    computed: {
-      areAllQuestionsAnswered() {
-        return this.respuestas[this.currentArea].length === this.areas[this.currentArea].questions.length;
-      },
-      areAllLikertQuestionsAnswered() {
-        return this.respuestasLikert[this.currentAreaLikert].length === this.areasLikert[this.currentAreaLikert].situaciones.length;
-      }
-    },
-    methods: {
-      nextArea() {
-        if (this.areAllQuestionsAnswered) {
-          this.currentArea++;
-        }
-      },
-      prevArea() {
-        if (this.currentArea > 0) {
-          this.currentArea--;
-        }
-      },
-      submitTest() {
-        const resultado = {};
-        this.respuestas.forEach((respuestasArea, areaIndex) => {
-          respuestasArea.forEach((respuesta, preguntaIndex) => {
-            const key = `R${preguntaIndex + 1}_A${areaIndex + 1}`;
-            resultado[key] = respuesta;
-          });
-        });
-  
-        console.log("Respuestas formateadas del test cognitivo:", resultado);
-        this.result = resultado; // Guardar resultado del test cognitivo
-      },
-      nextLikertArea() {
-        if (this.areAllLikertQuestionsAnswered) {
-          this.currentAreaLikert++;
-        }
-      },
-      prevLikertArea() {
-        if (this.currentAreaLikert > 0) {
-          this.currentAreaLikert--;
-        }
-      },
-      submitLikertTest() {
-        const respuestasLikertFormateadas = {};
-        this.areasLikert.forEach((area, areaIndex) => {
-          area.situaciones.forEach((situacion, situacionIndex) => {
-            const key = `S${situacionIndex + 1}_A${areaIndex + 1}`;
-            respuestasLikertFormateadas[key] = this.respuestasLikert[areaIndex][situacionIndex];
-          });
-        });
-  
-        // Combinación de las respuestas del test cognitivo y Likert
-        const resultadoFinal = {
-          test_cognitivo: this.result,
-          cuestionario_laboral: respuestasLikertFormateadas
-        };
-  
-        console.log("JSON final:", resultadoFinal);
-      }
+    areAllLikertQuestionsAnswered() {
+      return (
+        Array.isArray(this.respuestasLikert[this.currentAreaLikert]) &&
+        this.respuestasLikert[this.currentAreaLikert].length === this.areasLikert[this.currentAreaLikert].situaciones.length
+      );
     }
-  };
-  </script>
-  
-  <style scoped>
-  /* Personalización adicional si es necesaria */
-  </style>
-  
+  },
+  methods: {
+    nextArea() {
+      if (this.areAllQuestionsAnswered) {
+        this.currentArea++;
+      }
+    },
+    prevArea() {
+      if (this.currentArea > 0) {
+        this.currentArea--;
+      }
+    },
+    nextLikertArea() {
+      if (this.areAllLikertQuestionsAnswered) {
+        this.currentAreaLikert++;
+      }
+    },
+    prevLikertArea() {
+      if (this.currentAreaLikert > 0) {
+        this.currentAreaLikert--;
+      }
+    },
+    submitTest() {
+      const resultado = {};
+      this.respuestas.forEach((respuestasArea, areaIndex) => {
+        respuestasArea.forEach((respuesta, preguntaIndex) => {
+          const key = `R${preguntaIndex + 1}_A${areaIndex + 1}`;
+          resultado[key] = respuesta;
+        });
+      });
+
+      console.log("Respuestas formateadas del test cognitivo:", resultado);
+      this.result = resultado; // Guardar resultado del test cognitivo
+    },
+    submitLikertTest() {
+      const respuestasLikertFormateadas = {};
+      this.areasLikert.forEach((area, areaIndex) => {
+        area.situaciones.forEach((situacion, situacionIndex) => {
+          const key = `S${situacionIndex + 1}_A${areaIndex + 1}`;
+          respuestasLikertFormateadas[key] = this.respuestasLikert[areaIndex][situacionIndex];
+        });
+      });
+
+      const resultadoFinal = {
+        test_cognitivo: this.result,
+        cuestionario_laboral: respuestasLikertFormateadas
+      };
+
+      console.log("JSON final:", resultadoFinal);
+
+      vocationalApi(resultadoFinal)
+        .then(response => {
+          if (response.data.status) {
+            this.careers = response.data.data; // Guardar las carreras sugeridas
+            console.log('Carreras sugeridas:', this.careers);
+          } else {
+            console.error('Error al recibir las sugerencias:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error al enviar las respuestas:', error);
+        });
+    }
+  }
+};
+</script>
+
+<style scoped>
+/* Personalización adicional si es necesaria */
+</style>
