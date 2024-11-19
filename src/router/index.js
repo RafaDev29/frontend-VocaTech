@@ -14,7 +14,7 @@ const router = createRouter({
                 {
                     path: "welcome",
                     name: "welcome",
-                    component: () => import("@/views/welcomeView.vue")  // Vista de inicio
+                    component: () => import("@/views/WelcomeView.vue")  // Vista de inicio
                 },
                 {
                     path: "test-vocacional",
