@@ -31,21 +31,21 @@ export default {
     return {
       recursos: [
         {
-          titulo: "Video: Introducción al Test Vocacional",
-          descripcion: "Una breve introducción sobre cómo realizar el test vocacional.",
-          url: "https://www.youtube.com/embed/VIDEO_ID",
+          titulo: "Video: Recurso 1",
+          descripcion: "¿Buscas una carrera con un buen salario? En la siguiente nota, conoce las 7 carreras mejor pagadas en Perú para este 2023. Los sueldos pueden superar los S/ 4.000",
+          url: "https://www.youtube.com/embed/WdCFBovybf0",
           tipo: "video",
         },
         {
-          titulo: "Imagen: Ejemplo de Resultado",
-          descripcion: "Ejemplo visual de los resultados esperados.",
-          url: "https://via.placeholder.com/300",
-          tipo: "imagen",
+          titulo: "Video: Recurso 1",
+          descripcion: "¿Te gustaría aprender una carrera técnica que te permita desarrollar tus habilidades? En este videoencontrás información que necesitas saber sobre las carreras técnicas desde la duración, requisitos, ventajas, desventajas, cómo puedes acceder a ellas y algunos ejemplos.",
+          url: "https://www.youtube.com/embed/TN6sdNKPuTQ",
+          tipo: "video",
         },
         {
-          titulo: "Video: Consejos para el Test",
-          descripcion: "Sigue estos consejos para aprovechar al máximo tu test vocacional.",
-          url: "https://www.youtube.com/embed/ANOTHER_VIDEO_ID",
+          titulo: "Video: Recurso 3",
+          descripcion: "¿Cuáles son las carreras del futuro? En este video veremos cuáles son las profesiones y carreras que crecerán muchísimo en el futuro. Son relacionadas a la robótica, inteligencia artificial, medio ambiente, y tecnológicas.",
+          url: "https://www.youtube.com/embed/01P8RdUj_R0" ,
           tipo: "video",
         },
       ],
